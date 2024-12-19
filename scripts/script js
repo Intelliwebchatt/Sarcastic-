@@ -1,29 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Current year in the footer
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+  // Navigation Menu Toggle
+  const menuToggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('menu');
 
-    // Mobile navigation toggle
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
+  menuToggle.addEventListener('click', function() {
+    menu.classList.toggle('active');
+    const isExpanded = menu.classList.contains('active');
+    menuToggle.setAttribute('aria-expanded', isExpanded);
+  });
 
-    navToggle.addEventListener('click', () => {
-        const expanded = navToggle.getAttribute('aria-expanded') === 'true' || false;
-        navToggle.setAttribute('aria-expanded', !expanded);
-        navMenu.classList.toggle('open');
+  // Smooth Scrolling for Anchor Links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
     });
+  });
 
-    // Scroll animation: reveal sections when in viewport
-    const sections = document.querySelectorAll('section');
-    const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        sections.forEach(section => {
-            const rect = section.getBoundingClientRect();
-            if (rect.top <= windowHeight - 50) {
-                section.classList.add('visible');
-            }
-        });
-    };
+  // Intersection Observer for Section Animations
+  const sections = document.querySelectorAll('.section');
 
-    window.addEventListener('scroll', revealOnScroll);
-    revealOnScroll();
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.2
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // Set Current Year in Footer
+  const currentYearSpan = document.getElementById('current-year');
+  currentYearSpan.textContent = new Date().getFullYear();
+
+  // Contact Form Submission (Placeholder)
+  const contactForm = document.getElementById('contact-form');
+  contactForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    // Replace this with your actual form submission logic
+    alert('Form submission is not yet implemented.');
+  });
 });
