@@ -1,0 +1,29 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Current year in the footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Mobile navigation toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+
+    navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true' || false;
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('open');
+    });
+
+    // Scroll animation: reveal sections when in viewport
+    const sections = document.querySelectorAll('section');
+    const revealOnScroll = () => {
+        const windowHeight = window.innerHeight;
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= windowHeight - 50) {
+                section.classList.add('visible');
+            }
+        });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll();
+});
